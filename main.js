@@ -20,6 +20,8 @@ function createWindow() {
     app.setAppUserModelId('com.reactapp.fb-marketplace');
   }
 
+  let savedSearches = [];
+
   const mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
@@ -46,8 +48,8 @@ function createWindow() {
   mainWindow.setBrowserView(view);
 
   // Layout constants
-  const topBarHeight = 52;
-  const leftBarWidth = 250;
+  const topBarHeight = 0;
+  const leftBarWidth = 280;
   const urlBarHeight = 0; // space for URL display inside the content area
   const bottomOffset = 36; // space for bottom bar inside the content area
 
@@ -135,6 +137,18 @@ function createWindow() {
   // IPC listener for navigation requests from the renderer
   ipcMain.on('navigate', (event, relativePath) => {
     view.webContents.loadURL(BASE_URL + relativePath);
+  });
+
+  ipcMain.on('save-search', (event, query) => {
+    // Here you would insert the search term into your database.
+    // For this demo, we simply push it into the array.
+    savedSearches.push(query);
+    console.log("Saved search:", query);
+    event.reply('search-saved', savedSearches);
+  });
+  
+  ipcMain.on('get-saved-searches', (event) => {
+    event.reply('saved-searches', savedSearches);
   });
 
   // Handle window resize
