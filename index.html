@@ -161,6 +161,12 @@
         <li><a href="/marketplace/search?query=outdoor%20furniture">MANUAL SEARCH</a></li>
       </ul>
       <button id="copyBtn">Copy URL</button>
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Enter search term..." />
+        <button id="executeSearch">Search</button>
+        <button id="saveSearch">Save Search</button>
+        <button id="copyUrl">Copy URL</button>
+      </div>
     </nav>
     <div class="saved">
       <h2>Saved Products</h2>
@@ -168,9 +174,9 @@
         <!-- Saved Products -->
       </ul>
     </div>
-    <div class="saved">
+    <div class="saved saved-searches">
       <h2>Saved Searches</h2>
-      <ul id="savedSearchesList">
+      <ul id="savedSearchList">
         <!-- Saved Searches -->
       </ul>
     </div>
@@ -261,6 +267,56 @@
 
     // Populate the lists once the DOM is fully loaded
     document.addEventListener("DOMContentLoaded", populateSavedLists);
+  </script>
+  <script>
+    // Handle search execution
+    document.getElementById('executeSearch').addEventListener('click', () => {
+      const query = document.getElementById('searchInput').value;
+      if (query.trim() !== "") {
+        window.electronAPI.navigate('/marketplace/search/?query=' + encodeURIComponent(query));
+      }
+    });
+    
+    // Handle saving the search
+    document.getElementById('saveSearch').addEventListener('click', () => {
+      const query = document.getElementById('searchInput').value;
+      if (query.trim() !== "") {
+        window.electronAPI.saveSearch(query);
+      }
+    });
+    
+    // Display saved searches when received
+    function updateSavedSearches(searches) {
+      const list = document.getElementById('savedSearchList');
+      list.innerHTML = '';
+      searches.forEach(search => {
+        const li = document.createElement('li');
+        li.innerText = search;
+        // Clicking a saved search executes the search
+        li.addEventListener('click', () => {
+          window.electronAPI.navigate('/marketplace/search/?query=' + encodeURIComponent(search));
+        });
+        list.appendChild(li);
+      });
+    }
+    
+    // Listen for IPC events updating the saved searches
+    window.electronAPI.onSearchSaved((data) => {
+      updateSavedSearches(data);
+    });
+    window.electronAPI.onReceiveSavedSearches((data) => {
+      updateSavedSearches(data);
+    });
+    
+    // Request saved searches when the page loads
+    window.electronAPI.requestSavedSearches();
+    
+    // Handle copying the current URL to the clipboard
+    document.getElementById('copyUrl').addEventListener('click', () => {
+      const text = document.getElementById('current-url').innerText;
+      window.electronAPI.copyText(text);
+      alert('URL copied to clipboard!');
+    });
   </script>
 </body>
 </html>
