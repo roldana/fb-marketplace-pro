@@ -53,6 +53,28 @@
     .sidebar nav li a:hover {
       color: #4267B2;
     }
+    .search-container {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .search-container input[type="text"] {
+      padding: 5px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+    .search-container button {
+      padding: 5px 10px;
+      font-size: 14px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      background-color: #4267B2;
+      color: #fff;
+    }
+    /* Saved Items */
     .saved {
       margin-top: 30px;
       border-top: 1px solid #ddd;
@@ -78,6 +100,29 @@
     }
     .saved ul li a:hover {
       color: #4267B2;
+    }
+    /* Current URL Display at bottom of sidebar */
+    .current-url-container {
+      margin-top: 30px;
+      padding: 10px;
+      border-top: 1px solid #ddd;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .current-url-container span {
+      display: block;
+    }
+    .current-url-container button {
+      padding: 5px 10px;
+      font-size: 14px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      background-color: #28a745;
+      color: #fff;
+      align-self: flex-start;
     }
     
     /* Main Content Area */
@@ -158,14 +203,11 @@
         <li><a href="/marketplace/you/selling">Listings</a></li>
         <li><a href="/marketplace/create/item">New Item</a></li>
         <li><a href="/marketplace/you/insights">Insights</a></li>
-        <li><a href="/marketplace/search?query=outdoor%20furniture">MANUAL SEARCH</a></li>
       </ul>
-      <button id="copyBtn">Copy URL</button>
       <div class="search-container">
         <input type="text" id="searchInput" placeholder="Enter search term..." />
         <button id="executeSearch">Search</button>
         <button id="saveSearch">Save Search</button>
-        <button id="copyUrl">Copy URL</button>
       </div>
     </nav>
     <div class="saved">
@@ -179,6 +221,12 @@
       <ul id="savedSearchList">
         <!-- Saved Searches -->
       </ul>
+    </div>
+    <!-- Current URL Display at Sidebar Bottom -->
+    <div class="current-url-container">
+      <span>Current URL:</span>
+      <span id="current-url">https://www.facebook.com</span>
+      <button id="copyUrlBtn">Copy URL</button>
     </div>
   </aside>
   
@@ -213,7 +261,7 @@
     // Function to populate the saved lists
     function populateSavedLists() {
       const savedProductsList = document.getElementById("savedProductsList");
-      const savedSearchesList = document.getElementById("savedSearchesList");
+      const savedSearchesList = document.getElementById("savedSearchList");
 
       // Clear any existing items
       savedProductsList.innerHTML = "";
@@ -239,35 +287,29 @@
         savedSearchesList.appendChild(li);
       });
     }
-
-    // Event listener for the Copy URL button
-    document.getElementById("copyBtn").addEventListener("click", function() {
-      // Fallback to an empty string if there's no .url-display element
-      const urlText = document.querySelector(".url-display") ? document.querySelector(".url-display").innerText : "";
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(urlText).then(() => {
-          alert("URL copied to clipboard!");
-        }).catch(err => {
-          console.error("Failed to copy URL: ", err);
-        });
-      } else {
-        const textArea = document.createElement("textarea");
-        textArea.value = urlText;
-        document.body.appendChild(textArea);
-        textArea.select();
-        try {
-          document.execCommand("copy");
-          alert("URL copied to clipboard!");
-        } catch (err) {
-          console.error("Fallback: Unable to copy", err);
-        }
-        document.body.removeChild(textArea);
-      }
-    });
-
-    // Populate the lists once the DOM is fully loaded
+    // Populate the saved lists once the DOM is fully loaded
     document.addEventListener("DOMContentLoaded", populateSavedLists);
-  </script>
+    </script>
+    <script>
+      console.log("Copy Btn script loaded")
+      document.addEventListener("DOMContentLoaded", function() {
+        const copyBtn = document.getElementById("copyUrlBtn");
+        if (!copyBtn) {
+          console.error("copyUrlBtn element not found");
+          return;
+        }
+        copyBtn.addEventListener("click", function() {
+          console.log("Copy URL button clicked");
+          const urlText = document.getElementById("current-url").innerText;
+          if (window.electronAPI && typeof window.electronAPI.copyText === 'function') {
+            window.electronAPI.copyText(urlText);
+            alert("URL copied to clipboard!");
+          } else {
+            console.error("copyText function not available");
+          }
+        });
+      });
+    </script>
   <script>
     // Handle search execution
     document.getElementById('executeSearch').addEventListener('click', () => {
@@ -285,7 +327,7 @@
       }
     });
     
-    // Display saved searches when received
+    // Display saved searches when received from the main process
     function updateSavedSearches(searches) {
       const list = document.getElementById('savedSearchList');
       list.innerHTML = '';
@@ -310,13 +352,6 @@
     
     // Request saved searches when the page loads
     window.electronAPI.requestSavedSearches();
-    
-    // Handle copying the current URL to the clipboard
-    document.getElementById('copyUrl').addEventListener('click', () => {
-      const text = document.getElementById('current-url').innerText;
-      window.electronAPI.copyText(text);
-      alert('URL copied to clipboard!');
-    });
   </script>
 </body>
 </html>

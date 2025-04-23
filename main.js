@@ -84,7 +84,7 @@ function createWindow() {
     const currentURL = view.webContents.getURL();
     console.log("Navigated to:", currentURL); // Print to terminal
     mainWindow.webContents.executeJavaScript(`
-      document.querySelector('.url-display').innerText = ${JSON.stringify(currentURL)};
+      document.getElementById('current-url').innerText = ${JSON.stringify(currentURL)};
     `);
   };
 
@@ -92,47 +92,47 @@ function createWindow() {
   view.webContents.on('did-navigate-in-page', updateURLDisplay);
 
   // After the page finishes loading, attempt to extract products and update the sidebar
-  view.webContents.on('did-finish-load', () => {
-    // Update the URL display
-    updateURLDisplay();
+  // view.webContents.on('did-finish-load', () => {
+  //   // Update the URL display
+  //   updateURLDisplay();
 
-    // Extract product data from the page
-    // Adjust these selectors to match actual elements on the Marketplace page
-    const script = `
-      (function() {
-        const items = Array.from(document.querySelectorAll('.${PRODUCT_ITEM_CLASS}'));
-        return items.map(item => {
-          const titleEl = item.querySelector('.${PRODUCT_TITLE_CLASS}');
-          const priceEl = item.querySelector('.${PRODUCT_PRICE_CLASS}');
-          const linkEl = item.querySelector('a');
-          return {
-            url: linkEl ? linkEl.href : '',
-            title: titleEl ? titleEl.innerText.trim() : '',
-            price: priceEl ? priceEl.innerText.trim() : ''
-          };
-        });
-      })();
-    `;
-    view.webContents.executeJavaScript(script).then(products => {
-      let productHTML = '';
-      products.forEach(p => {
-        productHTML += `
-          <li>
-            <span class="product-title">${p.title}</span>
-            <span class="product-price">${p.price}</span><br/>
-            <a href="${p.url}" target="_blank">${p.url}</a>
-          </li>
-        `;
-      });
+  //   // Extract product data from the page
+  //   // Adjust these selectors to match actual elements on the Marketplace page
+  //   const script = `
+  //     (function() {
+  //       const items = Array.from(document.querySelectorAll('.${PRODUCT_ITEM_CLASS}'));
+  //       return items.map(item => {
+  //         const titleEl = item.querySelector('.${PRODUCT_TITLE_CLASS}');
+  //         const priceEl = item.querySelector('.${PRODUCT_PRICE_CLASS}');
+  //         const linkEl = item.querySelector('a');
+  //         return {
+  //           url: linkEl ? linkEl.href : '',
+  //           title: titleEl ? titleEl.innerText.trim() : '',
+  //           price: priceEl ? priceEl.innerText.trim() : ''
+  //         };
+  //       });
+  //     })();
+  //   `;
+  //   view.webContents.executeJavaScript(script).then(products => {
+  //     let productHTML = '';
+  //     products.forEach(p => {
+  //       productHTML += `
+  //         <li>
+  //           <span class="product-title">${p.title}</span>
+  //           <span class="product-price">${p.price}</span><br/>
+  //           <a href="${p.url}" target="_blank">${p.url}</a>
+  //         </li>
+  //       `;
+  //     });
 
-      mainWindow.webContents.executeJavaScript(`
-        const ul = document.querySelector('.saved-products .products-list');
-        if (ul) ul.innerHTML = ${JSON.stringify(productHTML)};
-      `);
-    }).catch(err => {
-      console.error('Error extracting products:', err);
-    });
-  });
+  //     mainWindow.webContents.executeJavaScript(`
+  //       const ul = document.querySelector('.saved-products .products-list');
+  //       if (ul) ul.innerHTML = ${JSON.stringify(productHTML)};
+  //     `);
+  //   }).catch(err => {
+  //     console.error('Error extracting products:', err);
+  //   });
+  // });
 
   // IPC listener for navigation requests from the renderer
   ipcMain.on('navigate', (event, relativePath) => {
