@@ -18,54 +18,10 @@
       overflow: hidden;
     }
     
-    /* Top Navigation Bar */
-    .top-nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background-color: #4267B2;
-      padding: 10px 20px;
-      color: #fff;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-    }
-    .top-nav .logo {
-      font-size: 22px;
-      font-weight: bold;
-    }
-    .top-nav .search {
-      flex: 1;
-      margin: 0 20px;
-    }
-    .top-nav .search input {
-      width: 100%;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 20px;
-      outline: none;
-      font-size: 14px;
-    }
-    .top-nav .user-actions {
-      display: flex;
-      align-items: center;
-    }
-    .top-nav .user-actions button {
-      background: transparent;
-      border: none;
-      color: #fff;
-      margin-left: 15px;
-      cursor: pointer;
-      font-size: 18px;
-    }
-    
     /* Sidebar Navigation */
     .sidebar {
       position: fixed;
-      top: 60px;
+      top: 0;
       bottom: 0;
       left: 0;
       width: 280px;
@@ -74,7 +30,7 @@
       padding: 20px;
       overflow-y: auto;
       transition: all 0.3s ease;
-      z-index: 90;
+      z-index: 90;  
     }
     .sidebar h2 {
       font-size: 18px;
@@ -97,39 +53,84 @@
     .sidebar nav li a:hover {
       color: #4267B2;
     }
-    .saved-products {
+    .search-container {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .search-container input[type="text"] {
+      padding: 5px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+    .search-container button {
+      padding: 5px 10px;
+      font-size: 14px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      background-color: #4267B2;
+      color: #fff;
+    }
+    /* Saved Items */
+    .saved {
       margin-top: 30px;
       border-top: 1px solid #ddd;
       padding-top: 20px;
     }
-    .saved-products h2 {
+    .saved h2 {
       font-size: 16px;
       margin-bottom: 10px;
       color: #555;
       text-transform: uppercase;
     }
-    .saved-products ul {
+    .saved ul {
       list-style: none;
     }
-    .saved-products ul li {
+    .saved ul li {
       margin-bottom: 10px;
     }
-    .saved-products ul li a {
+    .saved ul li a {
       font-size: 14px;
       color: #333;
       text-decoration: none;
       transition: color 0.2s ease;
     }
-    .saved-products ul li a:hover {
+    .saved ul li a:hover {
       color: #4267B2;
+    }
+    /* Current URL Display at bottom of sidebar */
+    .current-url-container {
+      margin-top: 30px;
+      padding: 10px;
+      border-top: 1px solid #ddd;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .current-url-container span {
+      display: block;
+    }
+    .current-url-container button {
+      padding: 5px 10px;
+      font-size: 14px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      background-color: #28a745;
+      color: #fff;
+      align-self: flex-start;
     }
     
     /* Main Content Area */
     .content {
-      margin-top: 60px;
+      margin-top: 0;
       margin-left: 280px;
       padding: 20px;
-      height: calc(100vh - 60px);
+      height: 100vh;
       overflow-y: auto;
     }
     
@@ -137,7 +138,7 @@
     .marketplace-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 2S0px;
+      gap: 50px;
     }
     .marketplace-item {
       background-color: #fff;
@@ -175,19 +176,8 @@
       .content {
         margin-left: 240px;
       }
-      .top-nav .search {
-        margin: 0 10px;
-      }
     }
     @media (max-width: 480px) {
-      .top-nav {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .top-nav .search {
-        width: 100%;
-        margin: 10px 0;
-      }
       .sidebar {
         display: none;
       }
@@ -198,22 +188,9 @@
   </style>
 </head>
 <body>
-  <!-- Top Navigation Bar -->
-  <header class="top-nav">
-    <div class="logo">Marketplace</div>
-    <div class="search">
-      <input type="text" placeholder="Search products..." />
-    </div>
-    <div class="user-actions">
-      <button title="Notifications">&#128276;</button>
-      <button title="Messages">&#9993;</button>
-      <button title="Profile">&#128100;</button>
-    </div>
-  </header>
-  
   <!-- Sidebar Navigation -->
   <aside class="sidebar">
-    <h2>Navigation</h2>
+    <h2>Marketplace</h2>
     <nav>
       <ul>
         <li><a href="/marketplace/you/dashboard/">Home</a></li>
@@ -227,31 +204,43 @@
         <li><a href="/marketplace/create/item">New Item</a></li>
         <li><a href="/marketplace/you/insights">Insights</a></li>
       </ul>
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Enter search term..." />
+        <button id="executeSearch">Search</button>
+        <button id="saveSearch">Save Search</button>
+      </div>
     </nav>
-    <button id="copyBtn">Copy URL</button>
-    <span class="url-display">Loading URL...</span>
-    <div class="saved-products">
+    <div class="saved">
       <h2>Saved Products</h2>
-      <ul>
-        <li><a href="#">Product 1</a></li>
-        <li><a href="#">Product 2</a></li>
-        <li><a href="#">Product 3</a></li>
+      <ul id="savedProductsList">
+        <!-- Saved Products -->
       </ul>
+    </div>
+    <div class="saved saved-searches">
+      <h2>Saved Searches</h2>
+      <ul id="savedSearchList">
+        <!-- Saved Searches -->
+      </ul>
+    </div>
+    <!-- Current URL Display at Sidebar Bottom -->
+    <div class="current-url-container">
+      <span>Current URL:</span>
+      <span id="current-url">https://www.facebook.com</span>
+      <button id="copyUrlBtn">Copy URL</button>
     </div>
   </aside>
   
   <!-- Main Content Area -->
   <main class="content">
-
+      <!-- The BrowserView is rendered on top of this area by Electron -->
   </main>
   
   <!-- JavaScript for Navigation Handling -->
   <script>
-    // Using modern event delegation for sidebar navigation clicks
-    document.querySelector('.sidebar nav').addEventListener('click', function(e) {
+    // Using event delegation for sidebar navigation clicks
+    document.querySelector('.sidebar').addEventListener('click', function(e) {
       if(e.target.tagName.toLowerCase() === 'a'){
         e.preventDefault();
-        // If using Electron, use the exposed API
         if(window.electronAPI && typeof window.electronAPI.navigate === 'function') {
           window.electronAPI.navigate(e.target.getAttribute('href'));
         }
@@ -281,6 +270,69 @@
         document.body.removeChild(textArea);
       }
     });
+  </script>
+    <script>
+      console.log("Copy Btn script loaded")
+      document.addEventListener("DOMContentLoaded", function() {
+        const copyBtn = document.getElementById("copyUrlBtn");
+        if (!copyBtn) {
+          console.error("copyUrlBtn element not found");
+          return;
+        }
+        copyBtn.addEventListener("click", function() {
+          console.log("Copy URL button clicked");
+          const urlText = document.getElementById("current-url").innerText;
+          if (window.electronAPI && typeof window.electronAPI.copyText === 'function') {
+            window.electronAPI.copyText(urlText);
+            alert("URL copied to clipboard!");
+          } else {
+            console.error("copyText function not available");
+          }
+        });
+      });
+    </script>
+  <script>
+    // Handle search execution
+    document.getElementById('executeSearch').addEventListener('click', () => {
+      const query = document.getElementById('searchInput').value;
+      if (query.trim() !== "") {
+        window.electronAPI.navigate('/marketplace/search/?query=' + encodeURIComponent(query));
+      }
+    });
+    
+    // Handle saving the search
+    document.getElementById('saveSearch').addEventListener('click', () => {
+      const query = document.getElementById('searchInput').value;
+      if (query.trim() !== "") {
+        window.electronAPI.saveSearch(query);
+      }
+    });
+    
+    // Display saved searches when received from the main process
+    function updateSavedSearches(searches) {
+      const list = document.getElementById('savedSearchList');
+      list.innerHTML = '';
+      searches.forEach(search => {
+        const li = document.createElement('li');
+        li.innerText = search;
+        // Clicking a saved search executes the search
+        li.addEventListener('click', () => {
+          window.electronAPI.navigate('/marketplace/search/?query=' + encodeURIComponent(search));
+        });
+        list.appendChild(li);
+      });
+    }
+    
+    // Listen for IPC events updating the saved searches
+    window.electronAPI.onSearchSaved((data) => {
+      updateSavedSearches(data);
+    });
+    window.electronAPI.onReceiveSavedSearches((data) => {
+      updateSavedSearches(data);
+    });
+    
+    // Request saved searches when the page loads
+    window.electronAPI.requestSavedSearches();
   </script>
 </body>
 </html>
