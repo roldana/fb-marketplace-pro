@@ -247,49 +247,6 @@
       }
     });
   </script>
-  <script>
-    // Emulated saved data for products and searches
-    console.log("TESTING NEW SCRIPT");
-    const savedProducts = [
-      { title: "Product 1", url: "/marketplace/search?query=outdoor%20furniture" }
-    ];
-
-    const savedSearches = [
-      { title: "Outdoor Furniture", url: "/marketplace/search?query=outdoor%20furniture" }
-    ];
-
-    // Function to populate the saved lists
-    function populateSavedLists() {
-      const savedProductsList = document.getElementById("savedProductsList");
-      const savedSearchesList = document.getElementById("savedSearchList");
-
-      // Clear any existing items
-      savedProductsList.innerHTML = "";
-      savedSearchesList.innerHTML = "";
-
-      // Populate Saved Products
-      savedProducts.forEach(product => {
-        const li = document.createElement("li");
-        const a = document.createElement("a");
-        a.href = product.url;
-        a.textContent = product.title;
-        li.appendChild(a);
-        savedProductsList.appendChild(li);
-      });
-
-      // Populate Saved Searches
-      savedSearches.forEach(search => {
-        const li = document.createElement("li");
-        const a = document.createElement("a");
-        a.href = search.url;
-        a.textContent = search.title;
-        li.appendChild(a);
-        savedSearchesList.appendChild(li);
-      });
-    }
-    // Populate the saved lists once the DOM is fully loaded
-    document.addEventListener("DOMContentLoaded", populateSavedLists);
-    </script>
     <script>
       console.log("Copy Btn script loaded")
       document.addEventListener("DOMContentLoaded", function() {
