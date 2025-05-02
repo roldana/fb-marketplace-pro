@@ -8,5 +8,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.on('search-saved', (event, data) => callback(data)),
   onReceiveSavedSearches: (callback) =>
     ipcRenderer.on('saved-searches', (event, data) => callback(data)),
-  copyText: (text) => clipboard.writeText(text)
+  copyText: (text) => ipcRenderer.send('copy-to-clipboard', text)
 });

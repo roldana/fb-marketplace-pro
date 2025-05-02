@@ -1,4 +1,4 @@
-const { app, BrowserWindow, BrowserView, ipcMain } = require('electron');
+const { app, BrowserWindow, BrowserView, ipcMain, clipboard } = require('electron');
 const path = require('path');
 
 // Base URL for Facebook
@@ -16,11 +16,15 @@ const PRODUCT_TITLE_CLASS = 'productTitle';  // Placeholder class for product ti
 const PRODUCT_PRICE_CLASS = 'productPrice';  // Placeholder class for product price
 
 function createWindow() {
+  console.log('[main] createWindow() running');
   if (process.platform === 'win32') {
     app.setAppUserModelId('com.reactapp.fb-marketplace');
   }
 
   let savedSearches = [];
+
+  const preloadPath = path.join(__dirname, 'preload.js');
+  console.log('[main] preload will be loaded from:', preloadPath);
 
   const mainWindow = new BrowserWindow({
     width: 1200,
@@ -31,11 +35,15 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
+      devTools: true
     }
   });
 
   // Load the local HTML with layout
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
+
+  // open Dev tools in new window
+  // mainWindow.webContents.openDevTools({ mode: 'detach' });
 
   // Create the BrowserView for the main content
   const view = new BrowserView({
@@ -149,6 +157,11 @@ function createWindow() {
   
   ipcMain.on('get-saved-searches', (event) => {
     event.reply('saved-searches', savedSearches);
+  });
+
+  ipcMain.on('copy-to-clipboard', (event, text) => {
+    // Use the clipboard module to copy text to the clipboard
+    clipboard.writeText(text);
   });
 
   // Handle window resize
