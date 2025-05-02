@@ -39,7 +39,7 @@ function createWindow() {
     }
   });
 
-  // Load the local HTML with layout
+  // Load the local HTML with the updated navigation bar
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
   // open Dev tools in new window
