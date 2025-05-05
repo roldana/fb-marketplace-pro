@@ -1,0 +1,10 @@
+services:
+  fb-marketplace-pro:
+    build: .
+    container_name: electron-vnc
+    environment:
+      VNC_PASSWORD: "fbmarketplace"
+    ports:
+      - "6080:6080"
+    # optional shared memory boost
+    shm_size: '1gb'
