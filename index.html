@@ -239,10 +239,15 @@
   <script>
     // Using event delegation for sidebar navigation clicks
     document.querySelector('.sidebar').addEventListener('click', function(e) {
+      console.log("Sidebar click event:", e);
       if(e.target.tagName.toLowerCase() === 'a'){
         e.preventDefault();
+        const targetHref = e.target.getAttribute('href');
+        console.log("Navigating to:", targetHref);
         if(window.electronAPI && typeof window.electronAPI.navigate === 'function') {
-          window.electronAPI.navigate(e.target.getAttribute('href'));
+          window.electronAPI.navigate(targetHref);
+        } else {
+          console.error("navigate function not available");
         }
       }
     });

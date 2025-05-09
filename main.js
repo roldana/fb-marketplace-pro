@@ -27,8 +27,8 @@ function createWindow() {
   console.log('[main] preload will be loaded from:', preloadPath);
 
   const mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: 1300,
+    height: 900,
     autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'), // If you have a preload (optional)
@@ -43,7 +43,7 @@ function createWindow() {
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
   // open Dev tools in new window
-  // mainWindow.webContents.openDevTools({ mode: 'detach' });
+  mainWindow.webContents.openDevTools({ mode: 'detach' });
 
   // Create the BrowserView for the main content
   const view = new BrowserView({
@@ -144,7 +144,10 @@ function createWindow() {
 
   // IPC listener for navigation requests from the renderer
   ipcMain.on('navigate', (event, relativePath) => {
-    view.webContents.loadURL(BASE_URL + relativePath);
+    console.log("Navigating to:", relativePath); // Print to terminal
+    const targetURL = BASE_URL + relativePath;
+    console.log("Target URL:", targetURL); // Print to terminal
+    view.webContents.loadURL(targetURL);
   });
 
   ipcMain.on('save-search', (event, query) => {
