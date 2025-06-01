@@ -1,8 +1,10 @@
-const { app, BrowserWindow, BrowserView, ipcMain, clipboard } = require('electron');
+const { app, BrowserWindow, BrowserView, ipcMain, clipboard, session} = require('electron');
 const path = require('path');
 
 // Base URL for Facebook
 const BASE_URL = "https://www.facebook.com";
+const LOGIN_URL = "/login";
+const DASHBOARD_URL = "/marketplace/you/dashboard";
 
 const SEARCH_URL = "https://www.facebook.com/marketplace/search/?query=";
 const SEARCH_INPUT_SELECTOR = 'input[placeholder="Search Marketplace"]';  
@@ -14,6 +16,14 @@ const SEARCH_ITEM_SELECTOR = '.searchResult';
 const PRODUCT_ITEM_CLASS = 'productItem';    // Placeholder class for product items
 const PRODUCT_TITLE_CLASS = 'productTitle';  // Placeholder class for product title
 const PRODUCT_PRICE_CLASS = 'productPrice';  // Placeholder class for product price
+
+async function isLoggedIn() {
+  const cookies = await session.defaultSession.cookies.get({
+    name: 'c_user',
+    domain: 'facebook.com'
+  });
+  return cookies.length > 0;
+}
 
 function createWindow() {
   console.log('[main] createWindow() running');
@@ -74,8 +84,21 @@ function createWindow() {
   resizeView();
   view.setAutoResize({ width: true, height: true });
 
+  const initial_url = '';
+
+  isLoggedIn()
+    .then(loggedIn => {
+      console.log('checking if user is logged in')
+      view.webContents.loadURL(loggedIn ? BASE_URL + DASHBOARD_URL : BASE_URL + LOGIN_URL )
+    })
+    .catch(err => {
+      console.error('Cookie check failed:', err);
+      view.webContents.loadURL(BASE_URL+LOGIN_URL);
+    });
+
+
   // Initial load
-  view.webContents.loadURL(BASE_URL + '/marketplace/you/dashboard/');
+  // view.webContents.loadURL(BASE_URL + DASHBOARD_URL);
 
   // Handle notification permissions
   const ses = view.webContents.session;
