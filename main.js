@@ -17,9 +17,11 @@ const PRODUCT_ITEM_CLASS = 'productItem';    // Placeholder class for product it
 const PRODUCT_TITLE_CLASS = 'productTitle';  // Placeholder class for product title
 const PRODUCT_PRICE_CLASS = 'productPrice';  // Placeholder class for product price
 
+const DEFAULT_SIDEBAR_WIDTH = 250;
+let sidebarWidth = DEFAULT_SIDEBAR_WIDTH;
+
 let mainWindow;
 let view;
-let sidebarWidth = 250;
 
 async function isLoggedIn() {
   const cookies = await session.defaultSession.cookies.get({
@@ -201,7 +203,7 @@ function createWindow() {
   });
 
   ipcMain.on('sidebar-toggled', (event, collapsed) => {
-    sidebarWidth = collapsed ? 0 : 250;
+    sidebarWidth = collapsed ? 0 : DEFAULT_SIDEBAR_WIDTH;
     resizeView();
   });
 }
