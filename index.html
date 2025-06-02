@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Facebook Marketplace - Modern UI</title>
+  <title>Facebook Marketplace Pro</title>
   <style>
     /* Reset and global settings */
     * {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
+      /* box-sizing: border-box; */
     }
     body {
       font-family: "Helvetica Neue", Arial, sans-serif;
@@ -17,55 +17,88 @@
       color: #333;
       overflow: hidden;
     }
+
+    #app-container {
+      display: flex;
+      position: relative;
+      height: 100vh;            /* fill viewport vertically */
+      overflow: hidden;
+    }
+
+    #toggle-btn {
+      position: absolute;
+      top: 95%;
+      transform: translateY(-50%);
+      width: 30px;
+      height: 50px;
+      border: none;
+      background: #007bff;       /* pick a color you like */
+      color: #fff;
+      cursor: pointer;
+      transition: left 0.3s ease;
+      z-index: 10;               /* sit above sidebar/main */
+    }
     
     /* Sidebar Navigation */
-    .sidebar {
-      position: fixed;
-      top: 0;
+    #sidebar {
+      /* top: 0;
       bottom: 0;
-      left: 0;
-      width: 280px;
+      left: 0; */
+      width: 250px;
       background-color: #fff;
       border-right: 1px solid #ddd;
       padding: 20px;
-      overflow-y: auto;
+      overflow: hidden;
       transition: all 0.3s ease;
       z-index: 90;  
     }
-    .sidebar h2 {
+
+    #sidebar.collapsed {
+      width: 0;
+    }
+
+    #sidebar:not(.collapsed) + #toggle-btn {
+      left: 250px;
+    }
+
+    #sidebar.collapsed + #toggle-btn {
+      left: 0;
+    }
+
+    #sidebar h2 {
       font-size: 18px;
       margin-bottom: 20px;
       color: #4267B2;
     }
-    .sidebar nav ul {
+    #sidebar nav ul {
       list-style: none;
     }
-    .sidebar nav li {
+    #sidebar nav li {
       margin-bottom: 15px;
     }
-    .sidebar nav li a {
+    #sidebar nav li a {
       text-decoration: none;
       font-size: 16px;
       color: #333;
       display: block;
       transition: color 0.2s ease;
     }
-    .sidebar nav li a:hover {
+    #sidebar nav li a:hover {
       color: #4267B2;
     }
-    .search-container {
+    #search-container {
       margin-top: 20px;
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
-    .search-container input[type="text"] {
+    #search-container input[type="text"] {
       padding: 5px;
       font-size: 14px;
       border: 1px solid #ccc;
       border-radius: 3px;
     }
-    .search-container button {
+    #search-container button {
       padding: 5px 10px;
       font-size: 14px;
       border: none;
@@ -126,62 +159,32 @@
     }
     
     /* Main Content Area */
-    .content {
-      margin-top: 0;
-      margin-left: 280px;
+    #main-content {
+      /* margin-top: 0; */
+      /* margin-left: 280px; */
       padding: 20px;
-      height: 100vh;
-      overflow-y: auto;
-    }
-    
-    /* Marketplace Grid */
-    .marketplace-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 50px;
-    }
-    .marketplace-item {
-      background-color: #fff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      overflow: hidden;
-      transition: box-shadow 0.3s ease;
-      cursor: pointer;
-    }
-    .marketplace-item:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .marketplace-item img {
-      width: 100%;
-      display: block;
-    }
-    .marketplace-item .item-details {
-      padding: 10px;
-    }
-    .marketplace-item .item-title {
-      font-size: 16px;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-    .marketplace-item .item-price {
-      font-size: 14px;
-      color: #888;
+      /* height: 100vh; */
+      /* overflow-y: auto; */
+      flex: 1;
+      background: #ffffff;
+      transition: margin-left 0.3s ease;
+      z-index: 5;
     }
     
     /* Responsive adjustments */
     @media (max-width: 768px) {
-      .sidebar {
+      #sidebar {
         width: 240px;
       }
-      .content {
+      #content {
         margin-left: 240px;
       }
     }
     @media (max-width: 480px) {
-      .sidebar {
+      #sidebar {
         display: none;
       }
-      .content {
+      #content {
         margin-left: 0;
       }
     }
@@ -189,7 +192,8 @@
 </head>
 <body>
   <!-- Sidebar Navigation -->
-  <aside class="sidebar">
+  <div id="app-container">
+  <aside id="sidebar">
     <h2>Marketplace</h2>
     <nav>
       <ul>
@@ -229,16 +233,19 @@
       <button id="copyUrlBtn">Copy URL</button>
     </div>
   </aside>
+
+  <button id="toggle-btn" aria-label="Toggle Sidebar">BTN</button>
   
   <!-- Main Content Area -->
-  <main class="content">
+  <main id="main-content">
       <!-- The BrowserView is rendered on top of this area by Electron -->
   </main>
+  </div>
   
   <!-- JavaScript for Navigation Handling -->
   <script>
     // Using event delegation for sidebar navigation clicks
-    document.querySelector('.sidebar').addEventListener('click', function(e) {
+    document.querySelector('#sidebar').addEventListener('click', function(e) {
       console.log("Sidebar click event:", e);
       if(e.target.tagName.toLowerCase() === 'a'){
         e.preventDefault();
@@ -252,7 +259,7 @@
       }
     });
     // Event listener for the Copy URL button
-    document.getElementById("copyBtn").addEventListener("click", function() {
+    document.getElementById("copyUrlBtn").addEventListener("click", function() {
       const urlText = document.querySelector(".url-display").innerText;
       if (navigator.clipboard) {
         navigator.clipboard.writeText(urlText).then(() => {
@@ -277,7 +284,6 @@
     });
   </script>
     <script>
-      console.log("Copy Btn script loaded")
       document.addEventListener("DOMContentLoaded", function() {
         const copyBtn = document.getElementById("copyUrlBtn");
         if (!copyBtn) {
@@ -338,6 +344,21 @@
     
     // Request saved searches when the page loads
     window.electronAPI.requestSavedSearches();
+  </script>
+  <script>
+    // SIDEBAR TOGGLING
+    document.addEventListener("DOMContentLoaded", function() {
+      const sidebar = document.getElementById('sidebar');
+      const toggleBtn = document.getElementById('toggle-btn');
+
+      toggleBtn.addEventListener('click', () => {
+        const nowCollapsed = sidebar.classList.toggle('collapsed');
+        
+        if (window.electronAPI && typeof window.electronAPI.toggleSidebar === 'function') {
+          window.electronAPI.toggleSidebar(nowCollapsed);
+        }
+      });
+    });
   </script>
 </body>
 </html>

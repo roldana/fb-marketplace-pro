@@ -17,12 +17,35 @@ const PRODUCT_ITEM_CLASS = 'productItem';    // Placeholder class for product it
 const PRODUCT_TITLE_CLASS = 'productTitle';  // Placeholder class for product title
 const PRODUCT_PRICE_CLASS = 'productPrice';  // Placeholder class for product price
 
+let mainWindow;
+let view;
+let sidebarWidth = 250;
+
 async function isLoggedIn() {
   const cookies = await session.defaultSession.cookies.get({
     name: 'c_user',
     domain: 'facebook.com'
   });
   return cookies.length > 0;
+}
+
+function resizeView() {
+  if (!mainWindow || !view) return;
+
+  const [windowWidth, windowHeight] = mainWindow.getSize();
+
+  const topBarHeight = 0;
+  const bottomOffset = 36;
+  const urlBarHeight = 0;
+
+  view.setBounds({
+    x: sidebarWidth,
+    y: topBarHeight + urlBarHeight,
+    width: windowWidth - sidebarWidth,
+    height: windowHeight - topBarHeight - urlBarHeight - bottomOffset
+  });
+  view.setAutoResize({ width: true, height: true });
+
 }
 
 function createWindow() {
@@ -36,7 +59,7 @@ function createWindow() {
   const preloadPath = path.join(__dirname, 'preload.js');
   console.log('[main] preload will be loaded from:', preloadPath);
 
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1300,
     height: 900,
     autoHideMenuBar: true,
@@ -55,37 +78,23 @@ function createWindow() {
   // open Dev tools in new window
   mainWindow.webContents.openDevTools({ mode: 'detach' });
 
-  // Create the BrowserView for the main content
-  const view = new BrowserView({
+  // BrowserView for the main content
+  view = new BrowserView({
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
+      session: session.defaultSession
     }
   });
   mainWindow.setBrowserView(view);
 
-  // Layout constants
-  const topBarHeight = 0;
-  const leftBarWidth = 280;
-  const urlBarHeight = 0; // space for URL display inside the content area
-  const bottomOffset = 36; // space for bottom bar inside the content area
-
-  function resizeView() {
-    const [currentWidth, currentHeight] = mainWindow.getSize();
-    view.setBounds({
-      x: leftBarWidth,
-      y: topBarHeight + urlBarHeight,
-      width: currentWidth - leftBarWidth,
-      height: currentHeight - topBarHeight - urlBarHeight - bottomOffset
-    });
-  }
-
-  resizeView();
-  view.setAutoResize({ width: true, height: true });
+  // Handle window resize
+  mainWindow.on('resize', () => {
+    resizeView();
+  });
 
   const initial_url = '';
-
   isLoggedIn()
     .then(loggedIn => {
       console.log('checking if user is logged in')
@@ -96,6 +105,7 @@ function createWindow() {
       view.webContents.loadURL(BASE_URL+LOGIN_URL);
     });
 
+  resizeView();
 
   // Initial load
   // view.webContents.loadURL(BASE_URL + DASHBOARD_URL);
@@ -190,8 +200,10 @@ function createWindow() {
     clipboard.writeText(text);
   });
 
-  // Handle window resize
-  mainWindow.on('resize', resizeView);
+  ipcMain.on('sidebar-toggled', (event, collapsed) => {
+    sidebarWidth = collapsed ? 0 : 250;
+    resizeView();
+  });
 }
 
 // When app is ready, create the window
