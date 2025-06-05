@@ -70,7 +70,8 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
-      devTools: true
+      devTools: true,
+      webviewTag: true
     }
   });
 
@@ -81,15 +82,16 @@ function createWindow() {
   mainWindow.webContents.openDevTools({ mode: 'detach' });
 
   // BrowserView for the main content
-  view = new BrowserView({
-    webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true,
-      enableRemoteModule: false,
-      session: session.defaultSession
-    }
-  });
-  mainWindow.setBrowserView(view);
+
+  // view = new BrowserView({
+  //   webPreferences: {
+  //     nodeIntegration: false,
+  //     contextIsolation: true,
+  //     enableRemoteModule: false,
+  //     session: session.defaultSession
+  //   }
+  // });
+  // mainWindow.setBrowserView(view);
 
   // Handle window resize
   mainWindow.on('resize', () => {
@@ -97,15 +99,16 @@ function createWindow() {
   });
 
   const initial_url = '';
-  isLoggedIn()
-    .then(loggedIn => {
-      console.log('checking if user is logged in')
-      view.webContents.loadURL(loggedIn ? BASE_URL + DASHBOARD_URL : BASE_URL + LOGIN_URL )
-    })
-    .catch(err => {
-      console.error('Cookie check failed:', err);
-      view.webContents.loadURL(BASE_URL+LOGIN_URL);
-    });
+  
+  // isLoggedIn()
+  //   .then(loggedIn => {
+  //     console.log('checking if user is logged in')
+  //     view.webContents.loadURL(loggedIn ? BASE_URL + DASHBOARD_URL : BASE_URL + LOGIN_URL )
+  //   })
+  //   .catch(err => {
+  //     console.error('Cookie check failed:', err);
+  //     view.webContents.loadURL(BASE_URL+LOGIN_URL);
+  //   });
 
   resizeView();
 

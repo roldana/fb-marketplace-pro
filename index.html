@@ -42,6 +42,8 @@
     #main-content {
       /* margin-top: 0; */
       /* margin-left: 280px; */
+      position: relative;
+      overflow: hidden;
       padding: 20px;
       /* height: 100vh; */
       /* overflow-y: auto; */
@@ -168,6 +170,15 @@
       color: #fff;
       align-self: flex-start;
     }
+
+    webview#fb-view {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
     
     /* Responsive adjustments */
     @media (max-width: 768px) {
@@ -236,7 +247,13 @@
   
   <!-- Main Content Area -->
   <main id="main-content">
-      <!-- The BrowserView is rendered on top of this area by Electron -->
+    <!-- This <webview> replaces the old BrowserView -->
+      <webview
+        id="fb-view"
+        src="https://www.facebook.com/marketplace/you/dashboard/"
+        user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+        style="width:100%; height:100%;"
+      ></webview>
   </main>
   </div>
   
@@ -357,5 +374,40 @@
       });
     });
   </script>
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Grab the <webview> one time
+    const webview = document.getElementById('facebook-view');
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggle-btn');
+
+    // Now reuse `webview` in any handler below:
+
+    sidebar.addEventListener('click', (e) => {
+      if (e.target.tagName.toLowerCase() === 'a') {
+        e.preventDefault();
+        const targetHref = e.target.href;
+        webview.loadURL(targetHref);
+      }
+    });
+
+    toggleBtn.addEventListener('click', () => {
+      const nowCollapsed = sidebar.classList.toggle('collapsed');
+      window.electronAPI.toggleSidebar(nowCollapsed);
+      // If you needed to do something to the webview when collapsing, you could use `webview` directly.
+    });
+
+    // For example, if you later have a “Refresh” button:
+    document.getElementById('refresh-btn').addEventListener('click', () => {
+      webview.reload();
+    });
+
+    // Or if you want to listen to webview events:
+    webview.addEventListener('did-finish-load', () => {
+      console.log('Webview has finished loading:', webview.getURL());
+    });
+  });
+</script>
+
 </body>
 </html>
