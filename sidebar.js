@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggleBtn = document.getElementById("toggle-btn");
   const webview = document.getElementById("fb-view");
 
+  const BASE_URL = "https://www.facebook.com";
+
   // Helper: update the layout of the webview based on sidebar state.
   // function updateLayout() {
   //   if (sidebar.classList.contains("collapsed")) {
@@ -21,7 +23,8 @@ document.addEventListener("DOMContentLoaded", () => {
   sidebar.addEventListener("click", (event) => {
     if (event.target.tagName.toLowerCase() === "a") {
       event.preventDefault();
-      const targetHref = event.target.getAttribute("href");
+      const clickHref = event.target.getAttribute("href");
+      const targetHref =  BASE_URL + (clickHref.startsWith("/") ? clickHref : "/" + clickHref);
       console.log("Navigating to:", targetHref);
       // Instruct the webview to navigate.
       if (webview && typeof webview.loadURL === "function") {

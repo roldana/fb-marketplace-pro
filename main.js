@@ -12,11 +12,6 @@ const SEARCH_BUTTON_SELECTOR = 'button[type="submit"]';
 const SEARCH_RESULTS_SELECTOR = '.searchResults';
 const SEARCH_ITEM_SELECTOR = '.searchResult';
 
-// Classes used to extract product information from the loaded page
-const PRODUCT_ITEM_CLASS = 'productItem';    // Placeholder class for product items
-const PRODUCT_TITLE_CLASS = 'productTitle';  // Placeholder class for product title
-const PRODUCT_PRICE_CLASS = 'productPrice';  // Placeholder class for product price
-
 const DEFAULT_SIDEBAR_WIDTH = 250;
 let sidebarWidth = DEFAULT_SIDEBAR_WIDTH;
 

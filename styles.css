@@ -92,19 +92,19 @@ body {
 #sidebar nav li a:hover {
     color: #4267B2;
 }
-#search-container {
+.search-container {
     margin-top: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
-#search-container input[type="text"] {
+.search-container input[type="text"] {
     padding: 5px;
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 3px;
 }
-#search-container button {
+.search-container button {
     padding: 5px 10px;
     font-size: 14px;
     border: none;
