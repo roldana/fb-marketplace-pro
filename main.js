@@ -30,13 +30,11 @@ function createWindow() {
 
   let savedSearches = [];
 
-  // const preloadPath = path.join(__dirname, 'preload.js');
-  // console.log('[main] preload will be loaded from:', preloadPath);
-
   mainWindow = new BrowserWindow({
     width: 1300,
     height: 900,
     autoHideMenuBar: true,
+    icon: path.join(__dirname, 'assets', 'icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'), 
       nodeIntegration: false,
@@ -46,9 +44,6 @@ function createWindow() {
       webviewTag: true
     }
   });
-  console.log('[main] mainWindow created');
-  mainWindow.setMenuBarVisibility(false); // Hide the menu bar
-  mainWindow.setTitle('Facebook Marketplace Pro');
 
   // Load the local HTML with the updated navigation bar
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
