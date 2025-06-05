@@ -3,359 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Facebook Marketplace Pro</title>
-  <style>
-    /* Reset and global settings */
-    * {
-      margin: 0;
-      padding: 0;
-      /* box-sizing: border-box; */
-    }
-    body {
-      font-family: "Helvetica Neue", Arial, sans-serif;
-      background-color: #f5f6f7;
-      color: #333;
-      overflow: hidden;
-    }
-
-    #app-container {
-      display: flex;
-      position: relative;
-      height: 100vh;            /* fill viewport vertically */
-      overflow: hidden;
-    }
-
-    #toggle-btn {
-      position: absolute;
-      bottom: 20px;
-      width: 30px;
-      height: 30px;
-      /* transform: translateY(-50%); */
-      border: none;
-      background: #007bff;       /* pick a color you like */
-      color: #fff;
-      cursor: pointer;
-      transition: left 0.3s ease;
-      z-index: 10;               /* sit above sidebar/main */
-    }
-
-    #main-content {
-      /* margin-top: 0; */
-      /* margin-left: 280px; */
-      padding: 20px;
-      /* height: 100vh; */
-      /* overflow-y: auto; */
-      flex: 1;
-      background: #ffffff;
-      transition: margin-left 0.3s ease;
-      z-index: 5;
-    }
-    
-    /* Sidebar Navigation */
-    #sidebar {
-      /* top: 0;
-      bottom: 0;
-      left: 0; */
-      width: 250px;
-      background-color: #fff;
-      border-right: 1px solid #ddd;
-      padding: 20px;
-      overflow: hidden;
-      transition: width 0.3s ease;
-    }
-
-    #sidebar.collapsed {
-      width: 0;
-    }
-
-    #sidebar:not(.collapsed) + #toggle-btn {
-      left: 270px;
-    }
-
-    #sidebar.collapsed + #toggle-btn {
-      left: 20px;
-    }
-
-    #sidebar h2 {
-      font-size: 18px;
-      margin-bottom: 20px;
-      color: #4267B2;
-    }
-    #sidebar nav ul {
-      list-style: none;
-    }
-    #sidebar nav li {
-      margin-bottom: 15px;
-    }
-    #sidebar nav li a {
-      text-decoration: none;
-      font-size: 16px;
-      color: #333;
-      display: block;
-      transition: color 0.2s ease;
-    }
-    #sidebar nav li a:hover {
-      color: #4267B2;
-    }
-    #search-container {
-      margin-top: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    #search-container input[type="text"] {
-      padding: 5px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 3px;
-    }
-    #search-container button {
-      padding: 5px 10px;
-      font-size: 14px;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      background-color: #4267B2;
-      color: #fff;
-    }
-    /* Saved Items */
-    .saved {
-      margin-top: 30px;
-      border-top: 1px solid #ddd;
-      padding-top: 20px;
-    }
-    .saved h2 {
-      font-size: 16px;
-      margin-bottom: 10px;
-      color: #555;
-      text-transform: uppercase;
-    }
-    .saved ul {
-      list-style: none;
-    }
-    .saved ul li {
-      margin-bottom: 10px;
-    }
-    .saved ul li a {
-      font-size: 14px;
-      color: #333;
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-    .saved ul li a:hover {
-      color: #4267B2;
-    }
-    /* Current URL Display at bottom of sidebar */
-    .current-url-container {
-      margin-top: 30px;
-      padding: 10px;
-      border-top: 1px solid #ddd;
-      font-size: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .current-url-container span {
-      display: block;
-    }
-    .current-url-container button {
-      padding: 5px 10px;
-      font-size: 14px;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      background-color: #28a745;
-      color: #fff;
-      align-self: flex-start;
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      #sidebar {
-        width: 240px;
-      }
-      #content {
-        margin-left: 240px;
-      }
-    }
-    @media (max-width: 480px) {
-      #sidebar {
-        display: none;
-      }
-      #content {
-        margin-left: 0;
-      }
-    }
-  </style>
+  <title>FB Marketplace Pro</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <!-- Sidebar Navigation -->
   <div id="app-container">
-  <aside id="sidebar">
-    <h2>Marketplace</h2>
-    <nav>
-      <ul>
-        <li><a href="/marketplace/you/dashboard/">Home</a></li>
-        <li><a href="/marketplace">Browse</a></li>
-        <li><a href="/marketplace/profile/PROFILE_NUMBER/">Profile</a></li>
-        <li><a href="/marketplace/inbox">Inbox</a></li>
-        <li><a href="/marketplace/you/saved">Saved</a></li>
-        <li><a href="/marketplace/you/alerts">Alerts</a></li>
-        <li><a href="/marketplace/you">Recent Activity</a></li>
-        <li><a href="/marketplace/you/selling">Listings</a></li>
-        <li><a href="/marketplace/create/item">New Item</a></li>
-        <li><a href="/marketplace/you/insights">Insights</a></li>
-      </ul>
-      <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Enter search term..." />
-        <button id="executeSearch">Search</button>
-        <button id="saveSearch">Save Search</button>
+    <div id="sidebar">
+      <h2>Marketplace</h2>
+      <nav>
+        <ul>
+          <li><a href="/marketplace/you/dashboard/">Home</a></li>
+          <li><a href="/marketplace">Browse</a></li>
+          <li><a href="/marketplace/create/item">New Item</a></li>
+          <!-- <li><a href="/marketplace/profile/PROFILE_NUMBER/">Profile</a></li> -->
+          <li><a href="/marketplace/inbox">Inbox</a></li>
+          <li><a href="/marketplace/you/saved">Saved</a></li>
+          <li><a href="/marketplace/you/alerts">Alerts</a></li>
+          <li><a href="/marketplace/you">Recent Activity</a></li>
+          <li><a href="/marketplace/you/selling">Listings</a></li>
+          <li><a href="/marketplace/you/insights">Insights</a></li>
+        </ul>
+        </nav>
+        <div class="search-container">
+          <input type="text" id="searchInput" placeholder="Enter search term..." />
+          <button id="executeSearch">Search</button>
+          <button id="saveSearch">Save Search</button>
+        </div>
+      <div class="saved">
+        <h2>Saved Products</h2>
+        <ul id="savedProductsList">
+          <!-- Saved Products -->
+        </ul>
       </div>
-    </nav>
-    <div class="saved">
-      <h2>Saved Products</h2>
-      <ul id="savedProductsList">
-        <!-- Saved Products -->
-      </ul>
+      <div class="saved saved-searches">
+        <h2>Saved Searches</h2>
+        <ul id="savedSearchList">
+          <!-- Saved Searches -->
+        </ul>
+      </div>
+      <!-- Current URL Display at Sidebar Bottom -->
+      <div class="current-url-container">
+        <span>Current URL:</span>
+        <span id="current-url">https://www.facebook.com</span>
+        <button id="copyUrlBtn">Copy URL</button>
+      </div>
     </div>
-    <div class="saved saved-searches">
-      <h2>Saved Searches</h2>
-      <ul id="savedSearchList">
-        <!-- Saved Searches -->
-      </ul>
-    </div>
-    <!-- Current URL Display at Sidebar Bottom -->
-    <div class="current-url-container">
-      <span>Current URL:</span>
-      <span id="current-url">https://www.facebook.com</span>
-      <button id="copyUrlBtn">Copy URL</button>
-    </div>
-  </aside>
-
-  <button id="toggle-btn" aria-label="Toggle Sidebar">BTN</button>
-  
   <!-- Main Content Area -->
-  <main id="main-content">
-      <!-- The BrowserView is rendered on top of this area by Electron -->
-  </main>
+    <div id="main-content">
+      <button id="toggle-btn" aria-label="Toggle Sidebar">BTN</button>
+      <!-- This <webview> replaces the old BrowserView -->
+        <webview id="fb-view"
+        src="https://www.facebook.com/marketplace/you/dashboard/"
+        user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+        ></webview>
+    </div>
   </div>
-  
-  <!-- JavaScript for Navigation Handling -->
-  <script>
-    // Using event delegation for sidebar navigation clicks
-    document.querySelector('#sidebar').addEventListener('click', function(e) {
-      console.log("Sidebar click event:", e);
-      if(e.target.tagName.toLowerCase() === 'a'){
-        e.preventDefault();
-        const targetHref = e.target.getAttribute('href');
-        console.log("Navigating to:", targetHref);
-        if(window.electronAPI && typeof window.electronAPI.navigate === 'function') {
-          window.electronAPI.navigate(targetHref);
-        } else {
-          console.error("navigate function not available");
-        }
-      }
-    });
-    // Event listener for the Copy URL button
-    document.getElementById("copyUrlBtn").addEventListener("click", function() {
-      const urlText = document.querySelector(".url-display").innerText;
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(urlText).then(() => {
-          alert("URL copied to clipboard!");
-        }).catch(err => {
-          console.error("Failed to copy URL: ", err);
-        });
-      } else {
-        // Fallback for browsers without navigator.clipboard
-        const textArea = document.createElement("textarea");
-        textArea.value = urlText;
-        document.body.appendChild(textArea);
-        textArea.select();
-        try {
-          document.execCommand("copy");
-          alert("URL copied to clipboard!");
-        } catch (err) {
-          console.error("Fallback: Unable to copy", err);
-        }
-        document.body.removeChild(textArea);
-      }
-    });
-  </script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function() {
-        const copyBtn = document.getElementById("copyUrlBtn");
-        if (!copyBtn) {
-          console.error("copyUrlBtn element not found");
-          return;
-        }
-        copyBtn.addEventListener("click", function() {
-          console.log("Copy URL button clicked");
-          const urlText = document.getElementById("current-url").innerText;
-          if (window.electronAPI && typeof window.electronAPI.copyText === 'function') {
-            window.electronAPI.copyText(urlText);
-            alert("URL copied to clipboard!");
-          } else {
-            console.error("copyText function not available");
-          }
-        });
-      });
-    </script>
-  <script>
-    // Handle search execution
-    document.getElementById('executeSearch').addEventListener('click', () => {
-      const query = document.getElementById('searchInput').value;
-      if (query.trim() !== "") {
-        window.electronAPI.navigate('/marketplace/search/?query=' + encodeURIComponent(query));
-      }
-    });
-    
-    // Handle saving the search
-    document.getElementById('saveSearch').addEventListener('click', () => {
-      const query = document.getElementById('searchInput').value;
-      if (query.trim() !== "") {
-        window.electronAPI.saveSearch(query);
-      }
-    });
-    
-    // Display saved searches when received from the main process
-    function updateSavedSearches(searches) {
-      const list = document.getElementById('savedSearchList');
-      list.innerHTML = '';
-      searches.forEach(search => {
-        const li = document.createElement('li');
-        li.innerText = search;
-        // Clicking a saved search executes the search
-        li.addEventListener('click', () => {
-          window.electronAPI.navigate('/marketplace/search/?query=' + encodeURIComponent(search));
-        });
-        list.appendChild(li);
-      });
-    }
-    
-    // Listen for IPC events updating the saved searches
-    window.electronAPI.onSearchSaved((data) => {
-      updateSavedSearches(data);
-    });
-    window.electronAPI.onReceiveSavedSearches((data) => {
-      updateSavedSearches(data);
-    });
-    
-    // Request saved searches when the page loads
-    window.electronAPI.requestSavedSearches();
-  </script>
-  <script>
-    // SIDEBAR TOGGLING
-    document.addEventListener("DOMContentLoaded", function() {
-      const sidebar = document.getElementById('sidebar');
-      const toggleBtn = document.getElementById('toggle-btn');
+<script src="renderer.js"></script>
+<script src="sidebar.js"></script>
 
-      toggleBtn.addEventListener('click', () => {
-        const nowCollapsed = sidebar.classList.toggle('collapsed');
-        if (window.electronAPI && typeof window.electronAPI.toggleSidebar === 'function') {
-          window.electronAPI.toggleSidebar(nowCollapsed);
-        }
-      });
-    });
-  </script>
 </body>
 </html>
