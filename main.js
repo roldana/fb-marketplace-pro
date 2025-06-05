@@ -31,25 +31,6 @@ async function isLoggedIn() {
   return cookies.length > 0;
 }
 
-function resizeView() {
-  if (!mainWindow || !view) return;
-
-  const [windowWidth, windowHeight] = mainWindow.getSize();
-
-  const topBarHeight = 0;
-  const bottomOffset = 36;
-  const urlBarHeight = 0;
-
-  view.setBounds({
-    x: sidebarWidth,
-    y: topBarHeight + urlBarHeight,
-    width: windowWidth - sidebarWidth,
-    height: windowHeight - topBarHeight - urlBarHeight - bottomOffset
-  });
-  view.setAutoResize({ width: true, height: true });
-
-}
-
 function createWindow() {
   console.log('[main] createWindow() running');
   if (process.platform === 'win32') {
@@ -74,32 +55,24 @@ function createWindow() {
       webviewTag: true
     }
   });
+  console.log('[main] mainWindow created');
+  mainWindow.setMenuBarVisibility(false); // Hide the menu bar
+  mainWindow.setTitle('Facebook Marketplace Pro');
 
   // Load the local HTML with the updated navigation bar
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
   // open Dev tools in new window
-  mainWindow.webContents.openDevTools({ mode: 'detach' });
-
-  // BrowserView for the main content
-
-  // view = new BrowserView({
-  //   webPreferences: {
-  //     nodeIntegration: false,
-  //     contextIsolation: true,
-  //     enableRemoteModule: false,
-  //     session: session.defaultSession
-  //   }
-  // });
-  // mainWindow.setBrowserView(view);
+  mainWindow.webContents.openDevTools({ mode: 'detached' });
 
   // Handle window resize
-  mainWindow.on('resize', () => {
-    resizeView();
-  });
+  // mainWindow.on('resize', () => {
+  //   resizeView();
+  // });
 
   const initial_url = '';
   
+  // IMPLEMENT THIS FUNCTIONALITY WITH WEBVIEW; IT WAS IMPLEMENTED WITH BROWSERVIEW
   // isLoggedIn()
   //   .then(loggedIn => {
   //     console.log('checking if user is logged in')
@@ -110,7 +83,7 @@ function createWindow() {
   //     view.webContents.loadURL(BASE_URL+LOGIN_URL);
   //   });
 
-  resizeView();
+  // resizeView();
 
   // Initial load
   // view.webContents.loadURL(BASE_URL + DASHBOARD_URL);
@@ -137,49 +110,6 @@ function createWindow() {
   view.webContents.on('did-navigate', updateURLDisplay);
   view.webContents.on('did-navigate-in-page', updateURLDisplay);
 
-  // After the page finishes loading, attempt to extract products and update the sidebar
-  // view.webContents.on('did-finish-load', () => {
-  //   // Update the URL display
-  //   updateURLDisplay();
-
-  //   // Extract product data from the page
-  //   // Adjust these selectors to match actual elements on the Marketplace page
-  //   const script = `
-  //     (function() {
-  //       const items = Array.from(document.querySelectorAll('.${PRODUCT_ITEM_CLASS}'));
-  //       return items.map(item => {
-  //         const titleEl = item.querySelector('.${PRODUCT_TITLE_CLASS}');
-  //         const priceEl = item.querySelector('.${PRODUCT_PRICE_CLASS}');
-  //         const linkEl = item.querySelector('a');
-  //         return {
-  //           url: linkEl ? linkEl.href : '',
-  //           title: titleEl ? titleEl.innerText.trim() : '',
-  //           price: priceEl ? priceEl.innerText.trim() : ''
-  //         };
-  //       });
-  //     })();
-  //   `;
-  //   view.webContents.executeJavaScript(script).then(products => {
-  //     let productHTML = '';
-  //     products.forEach(p => {
-  //       productHTML += `
-  //         <li>
-  //           <span class="product-title">${p.title}</span>
-  //           <span class="product-price">${p.price}</span><br/>
-  //           <a href="${p.url}" target="_blank">${p.url}</a>
-  //         </li>
-  //       `;
-  //     });
-
-  //     mainWindow.webContents.executeJavaScript(`
-  //       const ul = document.querySelector('.saved-products .products-list');
-  //       if (ul) ul.innerHTML = ${JSON.stringify(productHTML)};
-  //     `);
-  //   }).catch(err => {
-  //     console.error('Error extracting products:', err);
-  //   });
-  // });
-
   // IPC listener for navigation requests from the renderer
   ipcMain.on('navigate', (event, relativePath) => {
     console.log("Navigating to:", relativePath); // Print to terminal
@@ -203,11 +133,6 @@ function createWindow() {
   ipcMain.on('copy-to-clipboard', (event, text) => {
     // Use the clipboard module to copy text to the clipboard
     clipboard.writeText(text);
-  });
-
-  ipcMain.on('sidebar-toggled', (event, collapsed) => {
-    sidebarWidth = collapsed ? 0 : DEFAULT_SIDEBAR_WIDTH;
-    resizeView();
   });
 }
 

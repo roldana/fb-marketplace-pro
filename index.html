@@ -9,7 +9,7 @@
 <body>
   <!-- Sidebar Navigation -->
   <div id="app-container">
-    <aside id="sidebar">
+    <div id="sidebar">
       <h2>Marketplace</h2>
       <nav>
         <ul>
@@ -48,18 +48,17 @@
         <span id="current-url">https://www.facebook.com</span>
         <button id="copyUrlBtn">Copy URL</button>
       </div>
-    </aside>
-    <button id="toggle-btn" aria-label="Toggle Sidebar">BTN</button>
-  
+    </div>
   <!-- Main Content Area -->
-    <main id="main-content">
+    <div id="main-content">
+      <button id="toggle-btn" aria-label="Toggle Sidebar">BTN</button>
       <!-- This <webview> replaces the old BrowserView -->
-        <webview
-          id="fb-view"
-          src="https://www.facebook.com/marketplace/you/dashboard/"
-          user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+        <webview id="fb-view"
+        src="https://www.facebook.com/marketplace/you/dashboard/"
+        user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+        style="position:absolute; top:0; left:250px; width:calc(100% - 250px); height:100%;"
         ></webview>
-    </main>
+    </div>
   </div>
 <script src="sidebar.js"></script>
 </body>
