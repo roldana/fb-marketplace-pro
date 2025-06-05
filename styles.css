@@ -173,20 +173,3 @@ webview#fb-view {
     z-index: 1;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    #sidebar {
-    width: 240px;
-    }
-    #content {
-    margin-left: 240px;
-    }
-}
-@media (max-width: 480px) {
-    #sidebar {
-    display: none;
-    }
-    #content {
-    margin-left: 0;
-    }
-}

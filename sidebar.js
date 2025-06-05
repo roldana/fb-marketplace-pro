@@ -5,17 +5,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const webview = document.getElementById("fb-view");
 
   // Helper: update the layout of the webview based on sidebar state.
-  function updateLayout() {
-    if (sidebar.classList.contains("collapsed")) {
-      // Sidebar hidden; webview takes full width.
-      webview.style.left = "0";
-      webview.style.width = "100%";
-    } else {
-      // Sidebar visible; webview shifted to the right.
-      webview.style.left = "250px"; // or use your DEFAULT_SIDEBAR_WIDTH value
-      webview.style.width = "calc(100% - 250px)";
-    }
-  }
+  // function updateLayout() {
+  //   if (sidebar.classList.contains("collapsed")) {
+  //     // Sidebar hidden; webview takes full width.
+  //     webview.style.left = "0";
+  //     webview.style.width = "100%";
+  //   } else {
+  //     // Sidebar visible; webview shifted to the right.
+  //     webview.style.left = "250px"; // or use your DEFAULT_SIDEBAR_WIDTH value
+  //     webview.style.width = "calc(100% - 250px)";
+  //   }
+  // }
 
   // Sidebar navigation: handle clicks on links in the sidebar.
   sidebar.addEventListener("click", (event) => {
@@ -36,14 +36,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // Toggle sidebar on button click.
   toggleBtn.addEventListener("click", () => {
     sidebar.classList.toggle("collapsed");
-    updateLayout();
+    // updateLayout();
     // Optionally notify the main process.
-    if (
-      window.electronAPI &&
-      typeof window.electronAPI.toggleSidebar === "function"
-    ) {
-      window.electronAPI.toggleSidebar(sidebar.classList.contains("collapsed"));
-    }
+    // if (
+    //   window.electronAPI &&
+    //   typeof window.electronAPI.toggleSidebar === "function"
+    // ) {
+    //   window.electronAPI.toggleSidebar(sidebar.classList.contains("collapsed"));
+    // }
   });
 
   // URL Copy functionality (assumes one copy button exists).
@@ -115,5 +115,5 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Initial layout update.
-  updateLayout();
+  // updateLayout();
 });

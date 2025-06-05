@@ -39,15 +39,15 @@ function createWindow() {
 
   let savedSearches = [];
 
-  const preloadPath = path.join(__dirname, 'preload.js');
-  console.log('[main] preload will be loaded from:', preloadPath);
+  // const preloadPath = path.join(__dirname, 'preload.js');
+  // console.log('[main] preload will be loaded from:', preloadPath);
 
   mainWindow = new BrowserWindow({
     width: 1300,
     height: 900,
     autoHideMenuBar: true,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'), // If you have a preload (optional)
+      preload: path.join(__dirname, 'preload.js'), 
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
