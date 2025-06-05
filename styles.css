@@ -20,10 +20,10 @@ body {
 
 #toggle-btn {
     position: absolute;
-    bottom: 20px;
-    width: 30px;
-    height: 30px;
-    /* transform: translateY(-50%); */
+    bottom: 1rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50px;
     border: none;
     background: #007bff;       /* pick a color you like */
     color: #fff;
@@ -51,25 +51,25 @@ body {
     /* top: 0;
     bottom: 0;
     left: 0; */
-    width: 250px;
+    width: 16rem;
     background-color: #fff;
     border-right: 1px solid #ddd;
-    padding: 20px;
+    padding: 1rem;
     overflow: hidden;
-    transition: width 0.3s ease;
+    transition: width 0.35s ease;
 }
 
 #sidebar.collapsed {
     width: 0;
 }
 
-#sidebar:not(.collapsed) + #toggle-btn {
+/* #sidebar:not(.collapsed) + #toggle-btn {
     left: 270px;
 }
 
 #sidebar.collapsed + #toggle-btn {
     left: 20px;
-}
+} */
 
 #sidebar h2 {
     font-size: 18px;
