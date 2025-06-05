@@ -16,7 +16,11 @@
     "files": [
       "index.html",
       "main.js",
-      "preload.js"
+      "preload.js",
+      "renderer.js",
+      "sidebar.js",
+      "styles.css",
+      "assets/**/*"
     ],
     "mac": {
       "target": [
