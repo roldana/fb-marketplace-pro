@@ -1,4 +1,4 @@
-const { app, BrowserWindow, BrowserView, ipcMain, clipboard, session} = require('electron');
+const { app, BrowserWindow, ipcMain, clipboard, session} = require('electron');
 const path = require('path');
 
 // Base URL for Facebook
@@ -12,11 +12,7 @@ const SEARCH_BUTTON_SELECTOR = 'button[type="submit"]';
 const SEARCH_RESULTS_SELECTOR = '.searchResults';
 const SEARCH_ITEM_SELECTOR = '.searchResult';
 
-const DEFAULT_SIDEBAR_WIDTH = 250;
-let sidebarWidth = DEFAULT_SIDEBAR_WIDTH;
-
 let mainWindow;
-let view;
 
 async function isLoggedIn() {
   const cookies = await session.defaultSession.cookies.get({
@@ -58,12 +54,16 @@ function createWindow() {
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
   // open Dev tools in new window
-  mainWindow.webContents.openDevTools({ mode: 'detached' });
+  mainWindow.webContents.openDevTools({ mode: 'detach' });
 
-  // Handle window resize
-  // mainWindow.on('resize', () => {
-  //   resizeView();
-  // });
+  // enable notification permission
+  mainWindow.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
+    if (permission === 'notifications') {
+      callback(true);
+    } else {
+      callback(false);
+    }
+  });
 
   const initial_url = '';
   
@@ -78,39 +78,27 @@ function createWindow() {
   //     view.webContents.loadURL(BASE_URL+LOGIN_URL);
   //   });
 
-  // resizeView();
-
   // Initial load
   // view.webContents.loadURL(BASE_URL + DASHBOARD_URL);
 
-  // Handle notification permissions
-  const ses = view.webContents.session;
-  ses.setPermissionRequestHandler((webContents, permission, callback) => {
-    if (permission === 'notifications') {
-      callback(true);
-    } else {
-      callback(false);
-    }
-  });
-
   // Update URL display whenever navigation happens
   const updateURLDisplay = () => {
-    const currentURL = view.webContents.getURL();
+    const currentURL = mainWindow.webContents.getURL();
     console.log("Navigated to:", currentURL); // Print to terminal
     mainWindow.webContents.executeJavaScript(`
       document.getElementById('current-url').innerText = ${JSON.stringify(currentURL)};
     `);
   };
 
-  view.webContents.on('did-navigate', updateURLDisplay);
-  view.webContents.on('did-navigate-in-page', updateURLDisplay);
+  mainWindow.webContents.on('did-navigate', updateURLDisplay);
+  mainWindow.webContents.on('did-navigate-in-page', updateURLDisplay);
 
   // IPC listener for navigation requests from the renderer
   ipcMain.on('navigate', (event, relativePath) => {
     console.log("Navigating to:", relativePath); // Print to terminal
     const targetURL = BASE_URL + relativePath;
     console.log("Target URL:", targetURL); // Print to terminal
-    view.webContents.loadURL(targetURL);
+    mainWindow.webContents.loadURL(targetURL);
   });
 
   ipcMain.on('save-search', (event, query) => {
