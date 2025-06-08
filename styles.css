@@ -20,16 +20,19 @@ body {
 
 #toggle-btn {
     position: absolute;
+    font-weight: 600;
+    font-size: 2rem;
+    left: 1rem;               /* distance from left edge */
     bottom: 1rem;
     width: 3rem;
     height: 3rem;
-    border-radius: 50px;
+    border-radius: 3rem;
     border: none;
-    background: #007bff;       /* pick a color you like */
+    background: #1a77f2;
     color: #fff;
     cursor: pointer;
     transition: left 0.3s ease;
-    z-index: 10;               /* sit above sidebar/main */
+    z-index: 5;               /* sit above sidebar/main */
 }
 
 #main-content {
