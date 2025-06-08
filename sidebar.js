@@ -37,9 +37,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // URL Copy functionality (assumes one copy button exists).
   const copyUrlBtn = document.getElementById("copyUrlBtn");
+  const currentUrlElement = document.getElementById("current-url");
+  
+  const updateCurrentUrl = (event) => {
+    if (currentUrlElement) {
+      currentUrlElement.innerText = event.url || webview.getURL();
+    }
+  };
+
+  // attach event listeners to the webview for navigation events, and update the current url display
+  if (webview) {
+    webview.addEventListener("did-navigate", updateCurrentUrl);
+    webview.addEventListener("did-navigate-in-page", updateCurrentUrl);
+    webview.addEventListener("did-finish-load", () => {
+      // Update the current URL when the webview finishes loading, fallback
+      if (currentUrlElement) {
+        currentUrlElement.innerText = webview.getURL();
+      }
+    });
+   } else {
+      console.error("Webview element not found or does not support navigation events.");  
+    }
+
   if (copyUrlBtn) {
     copyUrlBtn.addEventListener("click", () => {
-      const urlText = document.getElementById("current-url").innerText;
+      const urlText = currentUrlElement ? currentUrlElement.innerText : "";
       if (
         window.electronAPI &&
         typeof window.electronAPI.copyText === "function"
@@ -55,9 +77,11 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Clipboard API not available.");
       }
     });
-  }
+  } else {
+    console.error("Copy URL element not found.");
+  };
 
-  // Handle search executixon.
+  // Handle search execution.
   document.getElementById("executeSearch").addEventListener("click", () => {
     const query = document.getElementById("searchInput").value;
     console.log("Search query:", query);
